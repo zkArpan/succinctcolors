@@ -7,10 +7,11 @@ interface LogoCanvasProps {
 
 const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
   const [pathColors, setPathColors] = useState({
-    path1: '#FE11C5',
-    path2: '#FE11C5',
-    path3: '#FE11C5',
-    path4: '#FE11C5',
+    background: '#3673F5',
+    text: '#3673F5',
+    line1: '#FFFFFF',
+    line2: '#FFFFFF',
+    line3: '#FFFFFF',
   });
 
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
@@ -26,21 +27,17 @@ const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
 
   const resetColors = () => {
     setPathColors({
-      path1: '#FE11C5',
-      path2: '#FE11C5',
-      path3: '#FE11C5',
-      path4: '#FE11C5',
+      background: '#3673F5',
+      text: '#3673F5',
+      line1: '#FFFFFF',
+      line2: '#FFFFFF',
+      line3: '#FFFFFF',
     });
-  };
-
-  const getPathOpacity = (pathId: string) => {
-    if (pathId === 'path2' || pathId === 'path4') return 0.4;
-    return 1;
   };
 
   const getPathStyle = (pathId: string) => ({
     fill: pathColors[pathId as keyof typeof pathColors],
-    opacity: getPathOpacity(pathId),
+    opacity: 1,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     filter: hoveredPath === pathId ? 'brightness(1.1) drop-shadow(0 0 8px rgba(0,0,0,0.3))' : 'none',
@@ -49,7 +46,11 @@ const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
   });
 
   const hasCustomColors = () => {
-    return Object.values(pathColors).some(color => color !== '#FE11C5');
+    return pathColors.background !== '#3673F5' || 
+           pathColors.text !== '#3673F5' || 
+           pathColors.line1 !== '#FFFFFF' || 
+           pathColors.line2 !== '#FFFFFF' || 
+           pathColors.line3 !== '#FFFFFF';
   };
 
   const shareOnX = () => {
@@ -79,11 +80,15 @@ Gprove @Succinctlabs #CreativeChallenge`;
       canvas.height = size;
       
       // Create SVG string with current colors
-      const svgString = `<svg width="216" height="309" viewBox="0 0 72 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M71.2968 10.2937V30.8773L53.4726 41.1672V20.5836L35.6484 30.8736V51.4572L17.8242 41.1672V20.5836L53.4726 0L71.2968 10.2937Z" fill="${pathColors.path1}"/>
-<path opacity="0.4" d="M35.6484 51.4579L17.8242 61.7478L0 51.4579L17.8242 41.168L35.6484 51.4579Z" fill="${pathColors.path2}"/>
-<path d="M53.4725 61.747V82.3306L17.8242 102.914L0 92.6205V72.0369L17.8242 61.747V82.3306L35.6484 72.0407V51.457L53.4725 61.747Z" fill="${pathColors.path3}"/>
-<path opacity="0.4" d="M71.2968 51.4579L53.4726 61.7478L35.6484 51.4579L53.4726 41.168L71.2968 51.4579Z" fill="${pathColors.path4}"/>
+      const svgString = `<svg width="738" height="248" viewBox="0 0 738 248" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M287.295 175.68V72H309.268V175.68H287.295Z" fill="${pathColors.text}"/>
+<path d="M338.834 175.68V72H361.812L419.689 141.12V72H442.237V175.68H419.258L361.094 106.272V175.68H338.834Z" fill="${pathColors.text}"/>
+<path d="M496.815 175.68C492.89 175.68 489.299 174.72 486.044 172.8C482.885 170.88 480.347 168.336 478.432 165.168C476.518 161.904 475.56 158.304 475.56 154.368V93.312C475.56 89.376 476.518 85.824 478.432 82.656C480.347 79.392 482.885 76.8 486.044 74.88C489.299 72.96 492.89 72 496.815 72H578.676V94.464H502.56C501.028 94.464 499.831 94.848 498.969 95.616C498.204 96.384 497.821 97.584 497.821 99.216V148.464C497.821 150 498.204 151.2 498.969 152.064C499.831 152.832 501.028 153.216 502.56 153.216H578.676V175.68H496.815Z" fill="${pathColors.text}"/>
+<path d="M631.852 175.68C628.022 175.68 624.48 174.72 621.224 172.8C617.969 170.88 615.384 168.288 613.469 165.024C611.554 161.76 610.597 158.208 610.597 154.368V93.312C610.597 89.376 611.554 85.824 613.469 82.656C615.384 79.392 617.969 76.8 621.224 74.88C624.48 72.96 628.022 72 631.852 72H692.745C696.575 72 700.069 72.96 703.229 74.88C706.484 76.8 709.069 79.392 710.984 82.656C712.995 85.824 714 89.376 714 93.312V154.368C714 158.208 712.995 161.76 710.984 165.024C709.069 168.288 706.484 170.88 703.229 172.8C700.069 174.72 696.575 175.68 692.745 175.68H631.852ZM632.857 153.216H691.452V94.464H632.857V153.216Z" fill="${pathColors.text}"/>
+<path d="M24 56C24 38.3269 38.2886 24 55.9145 24H191.551C209.177 24 223.466 38.3269 223.466 56V192C223.466 209.673 209.177 224 191.551 224H55.9145C38.2886 224 24 209.673 24 192V56Z" fill="${pathColors.background}"/>
+<path d="M61.8986 162L82.0047 86H103.786L83.6802 162H61.8986Z" fill="${pathColors.line1}"/>
+<path d="M103.786 162L123.893 86H145.674L125.568 162H103.786Z" fill="${pathColors.line2}"/>
+<path d="M145.674 162L165.78 86H187.562L167.456 162H145.674Z" fill="${pathColors.line3}"/>
 </svg>`;
 
       // Create blob from SVG
@@ -99,8 +104,8 @@ Gprove @Succinctlabs #CreativeChallenge`;
         ctx!.fillRect(0, 0, canvas.width, canvas.height);
         
         // Calculate dimensions to center the logo in the square
-        const logoWidth = 216 * scale;
-        const logoHeight = 309 * scale;
+        const logoWidth = 738 * scale;
+        const logoHeight = 248 * scale;
         const x = (canvas.width - logoWidth) / 2;
         const y = (canvas.height - logoHeight) / 2;
         
@@ -169,11 +174,15 @@ Gprove @Succinctlabs #CreativeChallenge`;
       canvas.height = size;
       
       // Create SVG string with current colors
-      const svgString = `<svg width="216" height="309" viewBox="0 0 72 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M71.2968 10.2937V30.8773L53.4726 41.1672V20.5836L35.6484 30.8736V51.4572L17.8242 41.1672V20.5836L53.4726 0L71.2968 10.2937Z" fill="${pathColors.path1}"/>
-<path opacity="0.4" d="M35.6484 51.4579L17.8242 61.7478L0 51.4579L17.8242 41.168L35.6484 51.4579Z" fill="${pathColors.path2}"/>
-<path d="M53.4725 61.747V82.3306L17.8242 102.914L0 92.6205V72.0369L17.8242 61.747V82.3306L35.6484 72.0407V51.457L53.4725 61.747Z" fill="${pathColors.path3}"/>
-<path opacity="0.4" d="M71.2968 51.4579L53.4726 61.7478L35.6484 51.4579L53.4726 41.168L71.2968 51.4579Z" fill="${pathColors.path4}"/>
+      const svgString = `<svg width="738" height="248" viewBox="0 0 738 248" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M287.295 175.68V72H309.268V175.68H287.295Z" fill="${pathColors.text}"/>
+<path d="M338.834 175.68V72H361.812L419.689 141.12V72H442.237V175.68H419.258L361.094 106.272V175.68H338.834Z" fill="${pathColors.text}"/>
+<path d="M496.815 175.68C492.89 175.68 489.299 174.72 486.044 172.8C482.885 170.88 480.347 168.336 478.432 165.168C476.518 161.904 475.56 158.304 475.56 154.368V93.312C475.56 89.376 476.518 85.824 478.432 82.656C480.347 79.392 482.885 76.8 486.044 74.88C489.299 72.96 492.89 72 496.815 72H578.676V94.464H502.56C501.028 94.464 499.831 94.848 498.969 95.616C498.204 96.384 497.821 97.584 497.821 99.216V148.464C497.821 150 498.204 151.2 498.969 152.064C499.831 152.832 501.028 153.216 502.56 153.216H578.676V175.68H496.815Z" fill="${pathColors.text}"/>
+<path d="M631.852 175.68C628.022 175.68 624.48 174.72 621.224 172.8C617.969 170.88 615.384 168.288 613.469 165.024C611.554 161.76 610.597 158.208 610.597 154.368V93.312C610.597 89.376 611.554 85.824 613.469 82.656C615.384 79.392 617.969 76.8 621.224 74.88C624.48 72.96 628.022 72 631.852 72H692.745C696.575 72 700.069 72.96 703.229 74.88C706.484 76.8 709.069 79.392 710.984 82.656C712.995 85.824 714 89.376 714 93.312V154.368C714 158.208 712.995 161.76 710.984 165.024C709.069 168.288 706.484 170.88 703.229 172.8C700.069 174.72 696.575 175.68 692.745 175.68H631.852ZM632.857 153.216H691.452V94.464H632.857V153.216Z" fill="${pathColors.text}"/>
+<path d="M24 56C24 38.3269 38.2886 24 55.9145 24H191.551C209.177 24 223.466 38.3269 223.466 56V192C223.466 209.673 209.177 224 191.551 224H55.9145C38.2886 224 24 209.673 24 192V56Z" fill="${pathColors.background}"/>
+<path d="M61.8986 162L82.0047 86H103.786L83.6802 162H61.8986Z" fill="${pathColors.line1}"/>
+<path d="M103.786 162L123.893 86H145.674L125.568 162H103.786Z" fill="${pathColors.line2}"/>
+<path d="M145.674 162L165.78 86H187.562L167.456 162H145.674Z" fill="${pathColors.line3}"/>
 </svg>`;
 
       // Create blob from SVG
@@ -189,8 +198,8 @@ Gprove @Succinctlabs #CreativeChallenge`;
         ctx!.fillRect(0, 0, canvas.width, canvas.height);
         
         // Calculate dimensions to center the logo in the square
-        const logoWidth = 216 * scale;
-        const logoHeight = 309 * scale;
+        const logoWidth = 738 * scale;
+        const logoHeight = 248 * scale;
         const x = (canvas.width - logoWidth) / 2;
         const y = (canvas.height - logoHeight) / 2;
         
@@ -233,39 +242,67 @@ Gprove @Succinctlabs #CreativeChallenge`;
       <div className="bg-white rounded-2xl shadow-lg p-12">
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-12 flex items-center justify-center">
           <svg 
-            width="216" 
-            height="309" 
-            viewBox="0 0 72 103" 
+            width="369" 
+            height="124" 
+            viewBox="0 0 738 248" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
             className="drop-shadow-lg"
           >
             <path
-              d="M71.2968 10.2937V30.8773L53.4726 41.1672V20.5836L35.6484 30.8736V51.4572L17.8242 41.1672V20.5836L53.4726 0L71.2968 10.2937Z"
-              style={getPathStyle('path1')}
-              onClick={() => handlePathClick('path1')}
-              onMouseEnter={() => setHoveredPath('path1')}
+              d="M287.295 175.68V72H309.268V175.68H287.295Z"
+              style={getPathStyle('text')}
+              onClick={() => handlePathClick('text')}
+              onMouseEnter={() => setHoveredPath('text')}
               onMouseLeave={() => setHoveredPath(null)}
             />
             <path
-              d="M35.6484 51.4579L17.8242 61.7478L0 51.4579L17.8242 41.168L35.6484 51.4579Z"
-              style={getPathStyle('path2')}
-              onClick={() => handlePathClick('path2')}
-              onMouseEnter={() => setHoveredPath('path2')}
+              d="M338.834 175.68V72H361.812L419.689 141.12V72H442.237V175.68H419.258L361.094 106.272V175.68H338.834Z"
+              style={getPathStyle('text')}
+              onClick={() => handlePathClick('text')}
+              onMouseEnter={() => setHoveredPath('text')}
               onMouseLeave={() => setHoveredPath(null)}
             />
             <path
-              d="M53.4725 61.747V82.3306L17.8242 102.914L0 92.6205V72.0369L17.8242 61.747V82.3306L35.6484 72.0407V51.457L53.4725 61.747Z"
-              style={getPathStyle('path3')}
-              onClick={() => handlePathClick('path3')}
-              onMouseEnter={() => setHoveredPath('path3')}
+              d="M496.815 175.68C492.89 175.68 489.299 174.72 486.044 172.8C482.885 170.88 480.347 168.336 478.432 165.168C476.518 161.904 475.56 158.304 475.56 154.368V93.312C475.56 89.376 476.518 85.824 478.432 82.656C480.347 79.392 482.885 76.8 486.044 74.88C489.299 72.96 492.89 72 496.815 72H578.676V94.464H502.56C501.028 94.464 499.831 94.848 498.969 95.616C498.204 96.384 497.821 97.584 497.821 99.216V148.464C497.821 150 498.204 151.2 498.969 152.064C499.831 152.832 501.028 153.216 502.56 153.216H578.676V175.68H496.815Z"
+              style={getPathStyle('text')}
+              onClick={() => handlePathClick('text')}
+              onMouseEnter={() => setHoveredPath('text')}
               onMouseLeave={() => setHoveredPath(null)}
             />
             <path
-              d="M71.2968 51.4579L53.4726 61.7478L35.6484 51.4579L53.4726 41.168L71.2968 51.4579Z"
-              style={getPathStyle('path4')}
-              onClick={() => handlePathClick('path4')}
-              onMouseEnter={() => setHoveredPath('path4')}
+              d="M631.852 175.68C628.022 175.68 624.48 174.72 621.224 172.8C617.969 170.88 615.384 168.288 613.469 165.024C611.554 161.76 610.597 158.208 610.597 154.368V93.312C610.597 89.376 611.554 85.824 613.469 82.656C615.384 79.392 617.969 76.8 621.224 74.88C624.48 72.96 628.022 72 631.852 72H692.745C696.575 72 700.069 72.96 703.229 74.88C706.484 76.8 709.069 79.392 710.984 82.656C712.995 85.824 714 89.376 714 93.312V154.368C714 158.208 712.995 161.76 710.984 165.024C709.069 168.288 706.484 170.88 703.229 172.8C700.069 174.72 696.575 175.68 692.745 175.68H631.852ZM632.857 153.216H691.452V94.464H632.857V153.216Z"
+              style={getPathStyle('text')}
+              onClick={() => handlePathClick('text')}
+              onMouseEnter={() => setHoveredPath('text')}
+              onMouseLeave={() => setHoveredPath(null)}
+            />
+            <path
+              d="M24 56C24 38.3269 38.2886 24 55.9145 24H191.551C209.177 24 223.466 38.3269 223.466 56V192C223.466 209.673 209.177 224 191.551 224H55.9145C38.2886 224 24 209.673 24 192V56Z"
+              style={getPathStyle('background')}
+              onClick={() => handlePathClick('background')}
+              onMouseEnter={() => setHoveredPath('background')}
+              onMouseLeave={() => setHoveredPath(null)}
+            />
+            <path
+              d="M61.8986 162L82.0047 86H103.786L83.6802 162H61.8986Z"
+              style={getPathStyle('line1')}
+              onClick={() => handlePathClick('line1')}
+              onMouseEnter={() => setHoveredPath('line1')}
+              onMouseLeave={() => setHoveredPath(null)}
+            />
+            <path
+              d="M103.786 162L123.893 86H145.674L125.568 162H103.786Z"
+              style={getPathStyle('line2')}
+              onClick={() => handlePathClick('line2')}
+              onMouseEnter={() => setHoveredPath('line2')}
+              onMouseLeave={() => setHoveredPath(null)}
+            />
+            <path
+              d="M145.674 162L165.78 86H187.562L167.456 162H145.674Z"
+              style={getPathStyle('line3')}
+              onClick={() => handlePathClick('line3')}
+              onMouseEnter={() => setHoveredPath('line3')}
               onMouseLeave={() => setHoveredPath(null)}
             />
           </svg>
@@ -274,7 +311,7 @@ Gprove @Succinctlabs #CreativeChallenge`;
 
       <div className="text-center space-y-4">
         <p className="text-gray-600 text-sm">
-          Click on different parts of the Succinct logo to color them
+          Click on different parts of the INCO logo to color them
         </p>
         
         <div className="flex gap-3 justify-center">
