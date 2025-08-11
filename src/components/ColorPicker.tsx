@@ -5,9 +5,10 @@ interface ColorPickerProps {
   selectedColor: string;
   onColorChange: (color: string) => void;
   onReset: () => void;
+  onAction: () => boolean;
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange, onReset }) => {
+const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange, onReset, onAction }) => {
   const presetColors = [
     // Original and vibrant colors
     '#FE11C5', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
@@ -48,13 +49,21 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
             <input
               type="color"
               value={selectedColor}
-              onChange={(e) => onColorChange(e.target.value)}
+              onChange={(e) => {
+                if (onAction()) {
+                  onColorChange(e.target.value);
+                }
+              }}
               className="w-12 h-12 rounded-lg border-2 border-gray-200 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
             />
             <input
               type="text"
               value={selectedColor}
-              onChange={(e) => onColorChange(e.target.value)}
+              onChange={(e) => {
+                if (onAction()) {
+                  onColorChange(e.target.value);
+                }
+              }}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="#FE11C5"
             />
@@ -70,7 +79,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
             {presetColors.map((color, index) => (
               <button
                 key={index}
-                onClick={() => onColorChange(color)}
+                onClick={() => {
+                  if (onAction()) {
+                    onColorChange(color);
+                  }
+                }}
                 className={`w-8 h-8 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-md ${
                   selectedColor === color ? 'border-gray-800 ring-2 ring-blue-500' : 'border-gray-200'
                 }`}

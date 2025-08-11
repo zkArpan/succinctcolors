@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Share, Copy, Check, Download } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface LogoCanvasProps {
   selectedColor: string;
+  currentUser: string | null;
+  onSaveSuccess: () => void;
 }
 
-const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
+const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor, currentUser, onSaveSuccess }) => {
   const [pathColors, setPathColors] = useState({
     background: '#3673F5',
     letterI: '#3673F5',
@@ -20,6 +23,7 @@ const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handlePathClick = (pathId: string) => {
     setPathColors(prev => ({
@@ -62,15 +66,61 @@ const LogoCanvas: React.FC<LogoCanvasProps> = ({ selectedColor }) => {
            pathColors.line3 !== '#FFFFFF';
   };
 
+  const saveLogoToDatabase = async () => {
+    if (!currentUser || !hasCustomColors()) return;
+
+    setSaving(true);
+    try {
+      // First, get or create user profile
+      let { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('x_username', currentUser)
+        .single();
+
+      if (profileError && profileError.code === 'PGRST116') {
+        // User doesn't exist, create them
+        const { data: newProfile, error: createError } = await supabase
+          .from('user_profiles')
+          .insert({ x_username: currentUser })
+          .select('id')
+          .single();
+
+        if (createError) throw createError;
+        profile = newProfile;
+      } else if (profileError) {
+        throw profileError;
+      }
+
+      // Save or update the logo
+      const { error: logoError } = await supabase
+        .from('user_logos')
+        .upsert({
+          user_id: profile.id,
+          logo_colors: pathColors,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (logoError) throw logoError;
+      
+      onSaveSuccess();
+    } catch (error) {
+      console.error('Error saving logo:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const shareOnX = () => {
-    const colors = Object.values(pathColors).join(', ');
-    const tweetText = `🎨 Just created my own version of the Succinct logo!
+    const tweetText = `🎨 Just created my own version of the INCO logo!
 
 Try creating your own colorful version at: 
 
-https://succinctcolors.netlify.app/
+${window.location.origin}
 
-Gprove @Succinctlabs #CreativeChallenge`;
+#INCOColors #CreativeChallenge`;
     
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
@@ -84,9 +134,12 @@ Gprove @Succinctlabs #CreativeChallenge`;
       
       // Set canvas size as 1:1 square (higher resolution for better quality)
       const scale = 3; // 3x resolution for crisp image
-      const size = 600 * scale; // 1800x1800 final resolution
-      canvas.width = size;
-      canvas.height = size;
+      const logoWidth = 738;
+      const logoHeight = 248;
+      const padding = 100; // Add padding around the logo
+      
+      canvas.width = (logoWidth + padding * 2) * scale;
+      canvas.height = (logoHeight + padding * 2) * scale;
       
       // Create SVG string with current colors
       const svgString = `<svg width="738" height="248" viewBox="0 0 738 248" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,14 +165,14 @@ Gprove @Succinctlabs #CreativeChallenge`;
         ctx!.fillStyle = '#ffffff';
         ctx!.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Calculate dimensions to center the logo in the square
-        const logoWidth = 738 * scale;
-        const logoHeight = 248 * scale;
-        const x = (canvas.width - logoWidth) / 2;
-        const y = (canvas.height - logoHeight) / 2;
+        // Calculate dimensions to center the logo
+        const scaledLogoWidth = logoWidth * scale;
+        const scaledLogoHeight = logoHeight * scale;
+        const x = (canvas.width - scaledLogoWidth) / 2;
+        const y = (canvas.height - scaledLogoHeight) / 2;
         
-        // Draw the SVG image centered in the square
-        ctx!.drawImage(img, x, y, logoWidth, logoHeight);
+        // Draw the SVG image centered
+        ctx!.drawImage(img, x, y, scaledLogoWidth, scaledLogoHeight);
         
         // Convert canvas to blob
         canvas.toBlob(async (blob) => {
@@ -131,6 +184,10 @@ Gprove @Succinctlabs #CreativeChallenge`;
                   'image/png': blob
                 })
               ]);
+              // Auto-save to database after successful copy
+              if (currentUser && hasCustomColors()) {
+                await saveLogoToDatabase();
+              }
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             } catch (clipboardError) {
@@ -178,9 +235,12 @@ Gprove @Succinctlabs #CreativeChallenge`;
       
       // Set canvas size as 1:1 square (higher resolution for better quality)
       const scale = 3; // 3x resolution for crisp image
-      const size = 600 * scale; // 1800x1800 final resolution
-      canvas.width = size;
-      canvas.height = size;
+      const logoWidth = 738;
+      const logoHeight = 248;
+      const padding = 100; // Add padding around the logo
+      
+      canvas.width = (logoWidth + padding * 2) * scale;
+      canvas.height = (logoHeight + padding * 2) * scale;
       
       // Create SVG string with current colors
       const svgString = `<svg width="738" height="248" viewBox="0 0 738 248" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -206,22 +266,26 @@ Gprove @Succinctlabs #CreativeChallenge`;
         ctx!.fillStyle = '#ffffff';
         ctx!.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Calculate dimensions to center the logo in the square
-        const logoWidth = 738 * scale;
-        const logoHeight = 248 * scale;
-        const x = (canvas.width - logoWidth) / 2;
-        const y = (canvas.height - logoHeight) / 2;
+        // Calculate dimensions to center the logo
+        const scaledLogoWidth = logoWidth * scale;
+        const scaledLogoHeight = logoHeight * scale;
+        const x = (canvas.width - scaledLogoWidth) / 2;
+        const y = (canvas.height - scaledLogoHeight) / 2;
         
-        // Draw the SVG image centered in the square
-        ctx!.drawImage(img, x, y, logoWidth, logoHeight);
+        // Draw the SVG image centered
+        ctx!.drawImage(img, x, y, scaledLogoWidth, scaledLogoHeight);
         
         // Convert canvas to blob and download
         canvas.toBlob((blob) => {
           if (blob) {
+            // Auto-save to database before download
+            if (currentUser && hasCustomColors()) {
+              saveLogoToDatabase();
+            }
             const downloadUrl = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = downloadUrl;
-            a.download = 'succinct-logo-custom.png';
+            a.download = 'inco-logo-custom.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -333,6 +397,20 @@ Gprove @Succinctlabs #CreativeChallenge`;
           
           {hasCustomColors() && (
             <>
+              {currentUser && (
+                <button
+                  onClick={saveLogoToDatabase}
+                  disabled={saving}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
+                    saving
+                      ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
+                  }`}
+                >
+                  {saving ? 'Saving...' : 'Save to Gallery'}
+                </button>
+              )}
+              
               <button
                 onClick={copyLogoToClipboard}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
