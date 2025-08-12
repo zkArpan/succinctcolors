@@ -196,7 +196,7 @@ ${window.location.origin}
               const downloadUrl = URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = downloadUrl;
-              a.download = 'succinct-logo-custom.png';
+              a.download = 'inco-logo-custom.png';
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
