@@ -120,7 +120,7 @@ Try creating your own colorful version at:
 
 ${window.location.origin}
 
-#INCOColors #CreativeChallenge`;
+#INCOlors @inconetwork #incommunity #getComfy #CreativeChallenge`;
     
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
