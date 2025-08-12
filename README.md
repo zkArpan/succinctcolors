@@ -1,1 +1,1 @@
-succinctcolors
+IncoLogo
