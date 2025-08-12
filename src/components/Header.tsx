@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogin, onLogout }) => {
         <div className="flex items-center gap-3">
           <Paintbrush className="w-8 h-8 text-pink-500" />
           <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
-            INCOLORS
+            INCOlors
           </h1>
         </div>
         
