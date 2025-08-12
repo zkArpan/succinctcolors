@@ -48,7 +48,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => 
         </div>
 
         <p className="text-gray-600 mb-6">
-          Enter your X (Twitter) username to save and share your custom INCO logo designs.
+          Enter your X username (Without @), to save your logo to community gallery
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
