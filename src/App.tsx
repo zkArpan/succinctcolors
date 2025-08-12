@@ -46,16 +46,16 @@ function App() {
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <Header 
           currentUser={currentUser}
           onLogin={() => setShowLoginModal(true)}
           onLogout={handleLogout}
         />
         
-        <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
           {/* Logo Canvas */}
-          <div className="flex justify-center">
+          <div className="flex justify-center order-1 lg:order-none">
             <LogoCanvas 
               selectedColor={selectedColor}
               currentUser={currentUser}
@@ -64,7 +64,7 @@ function App() {
           </div>
 
           {/* Color Picker */}
-          <div className="flex justify-center lg:justify-start">
+          <div className="flex justify-center lg:justify-start order-2 lg:order-none">
             <ColorPicker
               selectedColor={selectedColor}
               onColorChange={handleColorChange}

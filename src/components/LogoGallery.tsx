@@ -59,37 +59,37 @@ const LogoGallery: React.FC = () => {
   }
 
   return (
-    <div className="mt-12 max-w-7xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-lg p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <Palette className="w-6 h-6 text-purple-500" />
-          <h3 className="text-2xl font-semibold text-gray-800">Community Gallery</h3>
+    <div className="mt-6 sm:mt-8 lg:mt-12 max-w-7xl mx-auto">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />
+          <h3 className="text-xl sm:text-2xl font-semibold text-gray-800">Community Gallery</h3>
         </div>
         
         {logos.length === 0 ? (
-          <div className="text-center py-12">
-            <Palette className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">No logos created yet.</p>
-            <p className="text-gray-400">Be the first to create and share your INCO design!</p>
+          <div className="text-center py-8 sm:py-12">
+            <Palette className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+            <p className="text-gray-500 text-base sm:text-lg">No logos created yet.</p>
+            <p className="text-gray-400 text-sm sm:text-base">Be the first to create and share your INCO design!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {logos.map((logo) => (
               <div key={logo.id} className="group">
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mb-3 transition-transform group-hover:scale-105">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-2 sm:mb-3 transition-transform group-hover:scale-105">
                   <div 
-                    className="w-full h-24 flex items-center justify-center"
+                    className="w-full h-16 sm:h-20 lg:h-24 flex items-center justify-center overflow-hidden"
                     dangerouslySetInnerHTML={{ __html: generateLogoSvg(logo.logo_colors) }}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
+                <div className="flex items-center justify-between px-1">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs sm:text-sm font-bold">
                         {logo.user_profiles?.x_username?.[0]?.toUpperCase() || '?'}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">
                       @{logo.user_profiles?.x_username || 'unknown'}
                     </span>
                   </div>
@@ -100,7 +100,7 @@ const LogoGallery: React.FC = () => {
                     className="text-blue-500 hover:text-blue-600 transition-colors"
                     title="View X profile"
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                   </a>
                 </div>
               </div>

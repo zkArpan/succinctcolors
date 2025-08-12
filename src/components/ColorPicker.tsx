@@ -33,19 +33,19 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
-      <div className="flex items-center gap-3 mb-6">
-        <Palette className="w-6 h-6 text-gray-700" />
-        <h2 className="text-xl font-semibold text-gray-800">Color Picker</h2>
+    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-lg">
+      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Color Picker</h2>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Custom Color Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Custom Color
           </label>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <input
               type="color"
               value={selectedColor}
@@ -54,7 +54,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
                   onColorChange(e.target.value);
                 }
               }}
-              className="w-12 h-12 rounded-lg border-2 border-gray-200 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border-2 border-gray-200 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
             />
             <input
               type="text"
@@ -64,7 +64,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
                   onColorChange(e.target.value);
                 }
               }}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="#FE11C5"
             />
           </div>
@@ -75,7 +75,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
           <label className="block text-sm font-medium text-gray-700 mb-3">
             Preset Colors
           </label>
-          <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto">
+          <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5 sm:gap-2 max-h-48 sm:max-h-64 overflow-y-auto">
             {presetColors.map((color, index) => (
               <button
                 key={index}
@@ -84,7 +84,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
                     onColorChange(color);
                   }
                 }}
-                className={`w-8 h-8 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-md ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 rounded-md sm:rounded-lg border-2 cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-md ${
                   selectedColor === color ? 'border-gray-800 ring-2 ring-blue-500' : 'border-gray-200'
                 }`}
                 style={{ backgroundColor: color }}
@@ -97,9 +97,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ selectedColor, onColorChange,
         {/* Reset Button */}
         <button
           onClick={onReset}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200"
+          className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm sm:text-base font-medium rounded-lg transition-colors duration-200"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
           Reset to Original
         </button>
       </div>

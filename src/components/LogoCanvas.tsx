@@ -311,16 +311,15 @@ ${window.location.origin}
     }
   };
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="bg-white rounded-2xl shadow-lg p-12">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-12 flex items-center justify-center">
+    <div className="flex flex-col items-center gap-4 sm:gap-6 w-full">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 lg:p-12 w-full max-w-2xl">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-4 sm:p-8 lg:p-12 flex items-center justify-center overflow-x-auto">
           <svg 
-            width="369" 
-            height="124" 
+            className="w-full h-auto max-w-sm sm:max-w-md lg:max-w-lg drop-shadow-lg"
             viewBox="0 0 738 248" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
-            className="drop-shadow-lg"
+            style={{ minWidth: '280px' }}
           >
             <path
               d="M287.295 175.68V72H309.268V175.68H287.295Z"
@@ -383,14 +382,14 @@ ${window.location.origin}
       </div>
 
       <div className="text-center space-y-4">
-        <p className="text-gray-600 text-sm">
+        <p className="text-gray-600 text-xs sm:text-sm px-2">
           Click on different parts of the INCO logo to color them
         </p>
         
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2">
           <button
             onClick={resetColors}
-            className="px-4 py-2 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors border border-blue-200 rounded-lg hover:bg-blue-50"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium transition-colors border border-blue-200 rounded-lg hover:bg-blue-50"
           >
             Reset Colors
           </button>
@@ -401,7 +400,7 @@ ${window.location.origin}
                 <button
                   onClick={saveLogoToDatabase}
                   disabled={saving}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
+                  className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors border ${
                     saving
                       ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
                       : 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
@@ -413,34 +412,34 @@ ${window.location.origin}
               
               <button
                 onClick={copyLogoToClipboard}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors border ${
                   copied 
                     ? 'bg-green-50 border-green-200 text-green-700' 
                     : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
                 }`}
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-3 h-3 sm:w-4 sm:h-4" /> : <Copy className="w-3 h-3 sm:w-4 sm:h-4" />}
                 {copied ? 'Copied!' : 'Copy Logo'}
               </button>
               
               <button
                 onClick={downloadLogo}
                 disabled={downloading}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors border ${
                   downloading
                     ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
                 }`}
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                 {downloading ? 'Downloading...' : 'Download'}
               </button>
               
               <button
                 onClick={shareOnX}
-                className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors"
+                className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-black hover:bg-gray-800 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors"
               >
-                <Share className="w-4 h-4" />
+                <Share className="w-3 h-3 sm:w-4 sm:h-4" />
                 Share on X
               </button>
             </>
