@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, onLogin, onLogout }) => {
       </div>
       
       <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-        Express your creativity with the INCO logo! Click on different parts and paint them with your favorite colors, then share your unique creation with the world.
+        Express your creativity with the INCO logo! Click on different parts and paint them with your favorite colors, then share your unique creation with Incommunity.
       </p>
     </header>
   );
