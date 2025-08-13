@@ -4,6 +4,7 @@ import LogoCanvas from './components/LogoCanvas';
 import ColorPicker from './components/ColorPicker';
 import LoginModal from './components/LoginModal';
 import LogoGallery from './components/LogoGallery';
+import CommunityCover from './components/CommunityCover';
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FE11C5');
@@ -73,6 +74,9 @@ function App() {
             />
           </div>
         </div>
+
+        {/* Community Cover */}
+        <CommunityCover />
 
         {/* Logo Gallery */}
         <LogoGallery key={galleryKey} />
