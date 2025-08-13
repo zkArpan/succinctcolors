@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { ExternalLink, Palette } from 'lucide-react';
+import { ExternalLink, Palette, Plus } from 'lucide-react';
 import { supabase, UserLogo } from '../lib/supabase';
+
+const LOGOS_PER_PAGE = 12;
 
 const LogoGallery: React.FC = () => {
   const [logos, setLogos] = useState<UserLogo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     fetchLogos();
   }, []);
 
-  const fetchLogos = async () => {
+  const fetchLogos = async (page = 0, append = false) => {
+    if (page === 0) {
+      setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
+    
     try {
       const { data, error } = await supabase
         .from('user_logos')
@@ -21,14 +32,34 @@ const LogoGallery: React.FC = () => {
           )
         `)
         .order('created_at', { ascending: false })
-        .limit(12);
+        .range(page * LOGOS_PER_PAGE, (page + 1) * LOGOS_PER_PAGE - 1);
 
       if (error) throw error;
-      setLogos(data || []);
+      
+      const newLogos = data || [];
+      
+      if (append) {
+        setLogos(prev => [...prev, ...newLogos]);
+      } else {
+        setLogos(newLogos);
+      }
+      
+      // Check if there are more logos to load
+      setHasMore(newLogos.length === LOGOS_PER_PAGE);
+      setCurrentPage(page);
+      
     } catch (error) {
       console.error('Error fetching logos:', error);
+      setHasMore(false);
     } finally {
       setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const loadMore = () => {
+    if (!isLoadingMore && hasMore) {
+      fetchLogos(currentPage + 1, true);
     }
   };
 
@@ -105,6 +136,33 @@ const LogoGallery: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        
+        {/* Load More Button */}
+        {logos.length > 0 && hasMore && (
+          <div className="flex justify-center mt-6 sm:mt-8">
+            <button
+              onClick={loadMore}
+              disabled={isLoadingMore}
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-200 ${
+                isLoadingMore
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+              }`}
+            >
+              {isLoadingMore ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                  <span className="text-sm sm:text-base">Loading...</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">Load More Creations</span>
+                </>
+              )}
+            </button>
           </div>
         )}
       </div>
