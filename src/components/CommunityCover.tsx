@@ -65,9 +65,9 @@ const CommunityCover: React.FC = () => {
     const scale = 2;
     const canvasWidth = 1200; // 3:1 aspect ratio
     const canvasHeight = 400;
-    const logoWidth = 150;
-    const logoHeight = 50;
-    const margin = 8;
+    const logoWidth = 90;  // Smaller logos to fit more
+    const logoHeight = 30;
+    const margin = 4;      // Smaller margins
     const padding = 20;
 
     // Calculate how many logos fit in 3:1 ratio
