@@ -61,19 +61,23 @@ const CommunityCover: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set high resolution canvas
+    // Set 3:1 aspect ratio canvas
     const scale = 2;
-    const logoWidth = 184; // Half size for better fit
-    const logoHeight = 62;
+    const canvasWidth = 1200; // 3:1 aspect ratio
+    const canvasHeight = 400;
+    const logoWidth = 150;
+    const logoHeight = 50;
+    const margin = 8;
     const padding = 20;
-    const margin = 10;
 
-    // Calculate grid dimensions
-    const logosPerRow = Math.ceil(Math.sqrt(allLogos.length));
-    const rows = Math.ceil(allLogos.length / logosPerRow);
+    // Calculate how many logos fit in 3:1 ratio
+    const logosPerRow = Math.floor((canvasWidth - padding * 2 + margin) / (logoWidth + margin));
+    const maxRows = Math.floor((canvasHeight - padding * 2 + margin) / (logoHeight + margin));
+    const maxLogos = logosPerRow * maxRows;
     
-    const canvasWidth = (logoWidth + margin) * logosPerRow + padding * 2;
-    const canvasHeight = (logoHeight + margin) * rows + padding * 2 + 100; // Extra space for title
+    // Use only the logos that fit
+    const displayLogos = allLogos.slice(0, maxLogos);
+    const actualRows = Math.ceil(displayLogos.length / logosPerRow);
 
     canvas.width = canvasWidth * scale;
     canvas.height = canvasHeight * scale;
@@ -90,19 +94,12 @@ const CommunityCover: React.FC = () => {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Add title
-    ctx.fillStyle = '#7c3aed'; // purple-600
-    ctx.font = 'bold 32px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Community Creations', canvasWidth / 2, 50);
-
-    // Add subtitle
-    ctx.fillStyle = '#6b7280'; // gray-500
-    ctx.font = '16px system-ui, -apple-system, sans-serif';
-    ctx.fillText(`${allLogos.length} Unique INCO Designs`, canvasWidth / 2, 75);
+    // Center the grid vertically
+    const gridHeight = actualRows * (logoHeight + margin) - margin;
+    const startY = (canvasHeight - gridHeight) / 2;
 
     // Load and draw each logo
-    const logoPromises = allLogos.map((logo, index) => {
+    const logoPromises = displayLogos.map((logo, index) => {
       return new Promise<void>((resolve) => {
         const svgString = generateLogoSvg(logo.logo_colors);
         const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
@@ -113,18 +110,23 @@ const CommunityCover: React.FC = () => {
           const row = Math.floor(index / logosPerRow);
           const col = index % logosPerRow;
           
-          const x = padding + col * (logoWidth + margin);
-          const y = 100 + padding + row * (logoHeight + margin); // 100px offset for title area
+          // Center the row horizontally if it's not full
+          const logosInThisRow = Math.min(logosPerRow, displayLogos.length - row * logosPerRow);
+          const rowWidth = logosInThisRow * (logoWidth + margin) - margin;
+          const rowStartX = (canvasWidth - rowWidth) / 2;
+          
+          const x = rowStartX + col * (logoWidth + margin);
+          const y = startY + row * (logoHeight + margin);
           
           // Draw white background for logo
           ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x - 5, y - 5, logoWidth + 10, logoHeight + 10);
+          ctx.fillRect(x - 3, y - 3, logoWidth + 6, logoHeight + 6);
           
           // Add subtle shadow
           ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-          ctx.shadowBlur = 5;
-          ctx.shadowOffsetX = 2;
-          ctx.shadowOffsetY = 2;
+          ctx.shadowBlur = 3;
+          ctx.shadowOffsetX = 1;
+          ctx.shadowOffsetY = 1;
           
           // Draw logo
           ctx.drawImage(img, x, y, logoWidth, logoHeight);
@@ -134,13 +136,6 @@ const CommunityCover: React.FC = () => {
           ctx.shadowBlur = 0;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
-          
-          // Add username label
-          ctx.fillStyle = '#374151'; // gray-700
-          ctx.font = '10px system-ui, -apple-system, sans-serif';
-          ctx.textAlign = 'center';
-          const username = logo.user_profiles?.x_username || 'unknown';
-          ctx.fillText(`@${username}`, x + logoWidth / 2, y + logoHeight + 15);
           
           URL.revokeObjectURL(url);
           resolve();
