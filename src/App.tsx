@@ -5,6 +5,7 @@ import ColorPicker from './components/ColorPicker';
 import LoginModal from './components/LoginModal';
 import LogoGallery from './components/LogoGallery';
 import CommunityCover from './components/CommunityCover';
+import { useKeepAlive } from './hooks/useKeepAlive';
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FE11C5');
@@ -13,6 +14,9 @@ function App() {
   });
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [galleryKey, setGalleryKey] = useState(0);
+
+  // Keep database active
+  useKeepAlive();
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);

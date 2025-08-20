@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ExternalLink, Palette, Plus } from 'lucide-react';
+import { ExternalLink, Palette, Plus, Shuffle } from 'lucide-react';
 import { supabase, UserLogo } from '../lib/supabase';
 
 const LOGOS_PER_PAGE = 12;
@@ -10,10 +10,23 @@ const LogoGallery: React.FC = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'random'>('newest');
 
   useEffect(() => {
     fetchLogos();
   }, []);
+
+  useEffect(() => {
+    // Auto-shuffle every 30 minutes to keep database active
+    const shuffleInterval = setInterval(() => {
+      if (logos.length > 0) {
+        shuffleGallery();
+      }
+    }, 30 * 60 * 1000); // 30 minutes
+
+    return () => clearInterval(shuffleInterval);
+  }, [logos.length]);
 
   const fetchLogos = async (page = 0, append = false) => {
     if (page === 0) {
@@ -23,6 +36,9 @@ const LogoGallery: React.FC = () => {
     }
     
     try {
+      const orderBy = sortOrder === 'random' ? 'created_at' : 'created_at';
+      const ascending = sortOrder === 'random' ? Math.random() > 0.5 : false;
+      
       const { data, error } = await supabase
         .from('user_logos')
         .select(`
@@ -31,12 +47,17 @@ const LogoGallery: React.FC = () => {
             x_username
           )
         `)
-        .order('created_at', { ascending: false })
+        .order(orderBy, { ascending })
         .range(page * LOGOS_PER_PAGE, (page + 1) * LOGOS_PER_PAGE - 1);
 
       if (error) throw error;
       
       const newLogos = data || [];
+      
+      // If random order, shuffle the results
+      if (sortOrder === 'random') {
+        newLogos.sort(() => Math.random() - 0.5);
+      }
       
       if (append) {
         setLogos(prev => [...prev, ...newLogos]);
@@ -54,6 +75,26 @@ const LogoGallery: React.FC = () => {
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
+    }
+  };
+
+  const shuffleGallery = async () => {
+    setIsShuffling(true);
+    try {
+      // Toggle between newest and random
+      const newSortOrder = sortOrder === 'newest' ? 'random' : 'newest';
+      setSortOrder(newSortOrder);
+      
+      // Reset pagination and fetch fresh data
+      setCurrentPage(0);
+      setHasMore(true);
+      await fetchLogos(0, false);
+      
+      console.log(`Gallery shuffled to ${newSortOrder} order`);
+    } catch (error) {
+      console.error('Error shuffling gallery:', error);
+    } finally {
+      setIsShuffling(false);
     }
   };
 
@@ -95,6 +136,20 @@ const LogoGallery: React.FC = () => {
         <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />
           <h3 className="text-xl sm:text-2xl font-semibold text-gray-800">Community Gallery</h3>
+          <div className="flex-1"></div>
+          <button
+            onClick={shuffleGallery}
+            disabled={isShuffling}
+            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
+              isShuffling
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-purple-100 hover:bg-purple-200 text-purple-700'
+            }`}
+            title={`Currently showing ${sortOrder === 'newest' ? 'newest first' : 'random order'}`}
+          >
+            <Shuffle className={`w-3 h-3 sm:w-4 sm:h-4 ${isShuffling ? 'animate-spin' : ''}`} />
+            {isShuffling ? 'Shuffling...' : 'Shuffle'}
+          </button>
         </div>
         
         {logos.length === 0 ? (

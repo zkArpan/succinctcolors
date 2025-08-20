@@ -10,6 +10,13 @@ const CommunityCover: React.FC = () => {
 
   useEffect(() => {
     fetchAllLogos();
+    
+    // Refresh community cover every hour to keep database active
+    const refreshInterval = setInterval(() => {
+      fetchAllLogos();
+    }, 60 * 60 * 1000); // 1 hour
+
+    return () => clearInterval(refreshInterval);
   }, []);
 
   useEffect(() => {
